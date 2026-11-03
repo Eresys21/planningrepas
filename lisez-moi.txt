@@ -1,0 +1,146 @@
+═══════════════════════════════════════════════════════
+  MEALPLAN — GUIDE DE CONFIGURATION FIREBASE
+  (Synchronisation entre téléphones)
+═══════════════════════════════════════════════════════
+
+TEMPS ESTIMÉ : 10 minutes
+COÛT : Gratuit (quota largement suffisant pour une famille)
+
+───────────────────────────────────────────────────────
+ÉTAPE 1 — Créer un compte Firebase
+───────────────────────────────────────────────────────
+
+1. Allez sur : https://console.firebase.google.com
+2. Connectez-vous avec votre compte Google
+3. Cliquez sur "Créer un projet"
+4. Donnez un nom : "mealplan-famille" (ou ce que vous voulez)
+5. Désactivez Google Analytics (pas besoin) → "Créer le projet"
+6. Attendez 30 secondes, puis cliquez "Continuer"
+
+
+───────────────────────────────────────────────────────
+ÉTAPE 2 — Créer la base de données
+───────────────────────────────────────────────────────
+
+1. Dans le menu à gauche, cliquez "Firestore Database"
+2. Cliquez "Créer une base de données"
+3. Choisissez "Commencer en mode test"
+4. Sélectionnez la région "europe-west3 (Frankfurt)" → Activer
+5. Attendez que la base soit créée (30 secondes)
+
+
+───────────────────────────────────────────────────────
+ÉTAPE 3 — Récupérer la configuration
+───────────────────────────────────────────────────────
+
+1. Cliquez sur l'icône ⚙️ (Paramètres du projet) en haut à gauche
+2. Cliquez "Paramètres du projet"
+3. Faites défiler jusqu'à "Vos applications"
+4. Cliquez sur l'icône </> (Web)
+5. Donnez un nom : "mealplan-web" → "Enregistrer l'application"
+6. Vous verrez apparaître un bloc de code comme ceci :
+
+   const firebaseConfig = {
+     apiKey: "AIzaSy...",
+     authDomain: "mealplan-famille.firebaseapp.com",
+     projectId: "mealplan-famille",
+     storageBucket: "mealplan-famille.appspot.com",
+     messagingSenderId: "123456789",
+     appId: "1:123456789:web:abc123"
+   };
+
+7. Copiez TOUT ce bloc (de { jusqu'à })
+
+
+───────────────────────────────────────────────────────
+ÉTAPE 4 — Modifier le fichier index.html
+───────────────────────────────────────────────────────
+
+1. Ouvrez le fichier "index.html" avec un éditeur de texte
+   (sur Windows : clic droit → "Ouvrir avec" → Bloc-notes)
+   (sur Mac : clic droit → "Ouvrir avec" → TextEdit)
+
+2. Cherchez ce texte dans le fichier (Ctrl+F) :
+   const FIREBASE_CONFIG = {
+
+3. Remplacez le bloc FIREBASE_CONFIG entier par
+   la configuration copiée à l'étape 3.
+   Renommez juste "firebaseConfig" en "FIREBASE_CONFIG"
+
+   Exemple AVANT :
+   const FIREBASE_CONFIG = {
+     apiKey: "VOTRE_API_KEY",
+     authDomain: "VOTRE_PROJECT.firebaseapp.com",
+     ...
+   };
+
+   Exemple APRÈS :
+   const FIREBASE_CONFIG = {
+     apiKey: "AIzaSy...",
+     authDomain: "mealplan-famille.firebaseapp.com",
+     projectId: "mealplan-famille",
+     storageBucket: "mealplan-famille.appspot.com",
+     messagingSenderId: "123456789",
+     appId: "1:123456789:web:abc123"
+   };
+
+4. Sauvegardez le fichier
+
+
+───────────────────────────────────────────────────────
+ÉTAPE 5 — Remettre en ligne sur Netlify
+───────────────────────────────────────────────────────
+
+1. Allez sur : https://app.netlify.com
+2. Ouvrez votre projet MealPlan
+3. Allez dans l'onglet "Deploys"
+4. Faites glisser-déposer le dossier "meal-planner" entier
+   dans la zone de déploiement
+5. Attendez 30 secondes → votre app est mise à jour !
+
+
+───────────────────────────────────────────────────────
+ÉTAPE 6 — Vérifier que ça fonctionne
+───────────────────────────────────────────────────────
+
+1. Ouvrez l'app sur votre téléphone
+2. La bannière orange doit avoir disparu
+3. En haut à droite, vous devez voir "synchronisé" en vert
+4. Ajoutez une recette → ouvrez l'app sur un autre téléphone
+   → la recette doit apparaître automatiquement !
+
+
+───────────────────────────────────────────────────────
+SÉCURITÉ (optionnel, dans 30 jours)
+───────────────────────────────────────────────────────
+
+Le "mode test" expire après 30 jours.
+Pour continuer, allez dans Firestore → Règles et collez :
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+
+Cliquez "Publier". Cela garde votre base accessible.
+
+
+───────────────────────────────────────────────────────
+EN CAS DE PROBLÈME
+───────────────────────────────────────────────────────
+
+• La bannière orange reste affichée ?
+  → Vérifiez que vous avez bien remplacé TOUTE la config Firebase
+
+• "erreur" en rouge en haut à droite ?
+  → Vérifiez que Firestore est bien créé (Étape 2)
+  → Vérifiez que les règles sont en "mode test"
+
+• L'app ne charge pas du tout ?
+  → Vérifiez qu'il n'y a pas de faute de frappe dans la config
+
+═══════════════════════════════════════════════════════
