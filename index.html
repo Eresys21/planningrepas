@@ -979,7 +979,8 @@ window.removeReserve = function(i) {
 renderPlan();renderRecipes();renderReserves();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
 
-const ANTHROPIC_API_KEY = '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';
+// La clé API Claude n'est plus dans ce fichier : elle est gardée côté serveur
+// (fonction Netlify netlify/functions/scan.mjs, variable ANTHROPIC_API_KEY).
 
 window.scanPhoto = async function(input) {
   const file = input.files[0];
@@ -1001,13 +1002,10 @@ window.scanPhoto = async function(input) {
   status.textContent = '🤖 Claude analyse la recette…';
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('/.netlify/functions/scan', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: 'claude-opus-4-5',
