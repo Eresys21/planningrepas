@@ -144,3 +144,4 @@ EN CAS DE PROBLÈME
   → Vérifiez qu'il n'y a pas de faute de frappe dans la config
 
 ═══════════════════════════════════════════════════════
+
